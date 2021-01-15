@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
-import Register from "./components/register";
+import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import Navbar from "./components/navbar";
 
 class App extends Component {
   render() {
-    return (
-      <Register/>
-    );
+    return <Navbar />;
   }
 }
+
 export default App;

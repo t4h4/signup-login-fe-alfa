@@ -26,16 +26,6 @@ const email = (value) => {
   }
 };
 
-const vusername = (value) => {
-  if (value.length < 3 || value.length > 30) {
-    return (
-      <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 30 characters.
-      </div>
-    );
-  }
-};
-
 const vpassword = (value) => {
   if (value.length < 6 || value.length > 100) {
     return (
@@ -46,17 +36,15 @@ const vpassword = (value) => {
   }
 };
 
-class Register extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
-    this.handleRegister = this.handleRegister.bind(this);
-    this.onChangeUsername = this.onChangeUsername.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.responseGoogle = this.responseGoogle.bind(this);
 
     this.state = {
-      username: "",
       email: "",
       password: "",
       imageurl: "//ssl.gstatic.com/accounts/ui/avatar_2x.png",
@@ -64,23 +52,14 @@ class Register extends Component {
       message: "",
     };
   }
-
   responseGoogle = (response) => {
     console.log(response);
     this.setState({
-      username: response.profileObj.name,
       email: response.profileObj.email,
       password: response.profileObj.googleId + "aspava",
       imageurl: response.profileObj.imageUrl,
     });
   };
-
-  onChangeUsername(e) {
-    this.setState({
-      username: e.target.value,
-    });
-  }
-
   onChangeEmail(e) {
     this.setState({
       email: e.target.value,
@@ -93,7 +72,7 @@ class Register extends Component {
     });
   }
 
-  handleRegister(e) {
+  handleLogin(e) {
     e.preventDefault();
 
     this.setState({
@@ -104,14 +83,10 @@ class Register extends Component {
     this.form.validateAll();
 
     if (this.checkBtn.context._errors.length === 0) {
-      AuthService.register(
-        this.state.username,
-        this.state.email,
-        this.state.password
-      ).then(
+      AuthService.login(this.state.email, this.state.password).then(
         (response) => {
           this.setState({
-            message: "WELCOME " + response.data.email,
+            message: response.data.response,
             successful: true,
           });
         },
@@ -131,6 +106,7 @@ class Register extends Component {
       );
     }
   }
+
   render() {
     return (
       <div className="col-md-12">
@@ -142,14 +118,14 @@ class Register extends Component {
           />
 
           <Form
-            onSubmit={this.handleRegister}
+            onSubmit={this.handleLogin}
             ref={(c) => {
               this.form = c;
             }}
           >
             {!this.state.successful && (
               <div>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label htmlFor="username">Username</label>
                   <Input
                     type="text"
@@ -159,7 +135,7 @@ class Register extends Component {
                     onChange={this.onChangeUsername}
                     validations={[required, vusername]}
                   />
-                </div>
+                </div> */}
 
                 <div className="form-group">
                   <label htmlFor="email">Email</label>
@@ -186,9 +162,7 @@ class Register extends Component {
                 </div>
 
                 <div className="form-group">
-                  <button className="btn btn-primary btn-block">
-                    Register
-                  </button>
+                  <button className="btn btn-primary btn-block">Login</button>
                   <GoogleLogin
                     clientId="1003377021628-23ooqbvmi1l1rmnaof023khrpcjvi2qh.apps.googleusercontent.com"
                     render={(renderProps) => (
@@ -235,4 +209,4 @@ class Register extends Component {
     );
   }
 }
-export default Register;
+export default Login;
